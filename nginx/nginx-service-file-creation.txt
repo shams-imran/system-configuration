@@ -1,0 +1,37 @@
+Create This file in 
+/etc/systemd/system/nginx.service
+
+
+/opt/nginx/sbin/nginx -> this is the nginx bnary file location
+/opt/nginx/conf/nginx.conf ->nginx conf file location
+logs/nginx.pid -> In which file service saved the pid . This is found in conf/nginx.conf file.
+
+Then reload the deamon
+# systemctl daemon-reload
+# systemctl enable nginx.service
+# systemctl start nginx.service
+# systemctl stop nginx.service
+# systemctl reload nginx.service
+
+*** Note: If not work after deamon reload, restart the system.
+
+``` code
+
+[Unit]
+Description=nginx - high performance web server
+Documentation=http://nginx.org/en/docs/
+After=network.target remote-fs.target nss-lookup.target
+
+[Service]
+Type=forking
+PIDFile=logs/nginx.pid
+ExecStartPre=/opt/nginx/sbin/nginx -t -c /opt/nginx/conf/nginx.conf
+ExecStart=/opt/nginx/sbin/nginx -c /opt/nginx/conf/nginx.conf
+ExecReload=/bin/kill -s HUP $MAINPID
+ExecStop=/bin/kill -s QUIT $MAINPID
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target
+
+```

@@ -1,0 +1,24 @@
+Notes: 
+1. Install keepalived
+2. Configure keepalived
+3. Change Configuration in /etc/keepalived/keepalived.conf
+4. remove master or backup from keepalived.conf file and peast it to the conf file or copy
+5. add rules in firewall
+   # sudo firewall-cmd --permanent --add-service=http
+   # sudo firewall-cmd --add-rich-rule='rule protocol value="vrrp" accept' --permanent
+   # sudo firewall-cmd --reload
+6. sudo systemctl enable keepalived --now
+7. ip add show
+
+
+*** Note: We can use both bellw of two. 
+
+authentication {
+    auth_type AH
+    auth_pass secret
+  }
+
+authentication {
+              auth_type PASS
+              auth_pass 12345
+        }
