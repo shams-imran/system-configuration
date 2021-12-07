@@ -1,0 +1,14 @@
+version: '3.3'
+services:
+    registry:
+        ports:
+            - '5000:5000'
+        image: 'registry:latest'
+        volumes:
+            - /home/dev-ops-1/registry/data_dir/data:/var/lib/registry
+
+volumes:
+  data:
+      driver: local
+
+=======================================================================================
