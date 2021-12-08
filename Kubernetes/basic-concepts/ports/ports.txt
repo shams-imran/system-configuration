@@ -1,0 +1,43 @@
+nodePort:
+    To access from outside, type <node_IP>:<nodePort> in browser.
+    Listens external request on all worker nodes on nodeIp:port and forward the request to port.
+
+targetPort:
+    This is the actual port on which your application is running inside the container.
+
+Port:
+    Some times your application inside container serves different services on a different port. port where Service runs inside the pod.
+
+Example:
+    The actual application can run 8080 and health checks for this application can run on 8089 port of the container.
+    So if you hit the service without port it doesn't know to which port of the container it should redirect the request.
+    Service needs to have a mapping so that it can hit the specific port of the container.
+
+Summary:
+    all requests end up in the targetPort.
+    nodePort is used if request from outside k8s network & port if from within.
+
+See: https://stackoverflow.com/questions/49981601/difference-between-targetport-and-port-in-kubernetes-service-definition
+
+Code for webserver's service.yml:
+------------------------------------
+spec:
+  selector:
+    app: Webserver
+  type: NodePort        // written to make this service accessible from outside.
+  ports:
+    - nodePort: 30475   // To access from outside, type <host_IP>:30475 in browser.
+      port: 5050        // (ignore for now, I will explain below).
+      protocol: TCP
+      targetPort: 80  // port where httpd runs inside the webserver pod.
+
+Code for Appserver's service.yml
+----------------------------------
+spec:
+  selector:
+    app: appserver
+  type: ClusterIP        // written to make this service NOT accessible from outside.
+  ports:
+    - port: 5050         // port to access this container internally
+      protocol: TCP
+      targetPort: 8080   // port where tomcat runs inside the appserver pod.
