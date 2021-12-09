@@ -10,6 +10,10 @@ Notes:
 6. sudo systemctl enable keepalived --now
 7. ip add show
 
+8. Set Linux Kernel parameters as follows to support Floating IP.
+  [root@webserver-01 ~]# echo "net.ipv4.ip_nonlocal_bind = 1" >> /etc/sysctl.conf
+  [root@webserver-01 ~]# sysctl -p
+  net.ipv4.ip_nonlocal_bind = 1
 
 *** Note: We can use both bellw of two. 
 
