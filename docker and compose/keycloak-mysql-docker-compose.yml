@@ -1,0 +1,35 @@
+version: '3.2'
+services:    
+  mariadb:
+    image: mariadb
+    volumes:
+    - mysql_data:/var/lib/mysql
+    environment:
+        MYSQL_ROOT_PASSWORD: root
+        MYSQL_DATABASE: keycloak
+        MYSQL_USER: keycloak
+        MYSQL_PASSWORD: 123456
+    container_name: mariadb
+
+  keycloak:
+    image: jboss/keycloak
+    ports:
+     - '8080:8080'
+     - '8467:8443'
+    environment:
+        DB_VENDOR: mariadb
+        DB_ADDR: mariadb
+        DB_DATABASE: keycloak
+        DB_USER: keycloak
+        DB_PASSWORD: 123456
+        KEYCLOAK_USER: admin
+        KEYCLOAK_PASSWORD: 123456
+        JGROUPS_DISCOVERY_PROTOCOL: JDBC_PING
+    depends_on:
+        - mariadb
+    container_name: keycloak
+        
+volumes:
+  mysql_data:
+      driver: local
+
