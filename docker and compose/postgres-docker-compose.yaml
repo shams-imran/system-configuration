@@ -1,0 +1,39 @@
+version: "3"
+services:
+        
+  oss_postgres:
+    image: postgres:12
+    volumes:
+      - '/root/all_data/oss_postgres_data:/var/lib/postgresql/data'
+    ports:
+      - 5431:5432
+    environment:
+      POSTGRES_DB: oss
+      POSTGRES_USER: oss
+      POSTGRES_PASSWORD: SagoL@Grade1
+    networks:
+      - postgres
+    container_name: oss_postgres
+    restart: unless-stopped  
+              
+  pgadmin:
+    container_name: pgadmin_container
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-pgadmin4@pgadmin.org}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-SagoL@Grade1}
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    volumes:
+        - '/root/all_data/pgadmin:/var/lib/pgadmin'
+    ports:
+      - "${PGADMIN_PORT:-5050}:80"
+    networks:
+      - postgres
+    container_name: pgadmin
+    restart: unless-stopped
+    depends_on:
+        - oss_postgres
+        
+networks: 
+  postgres:
+    driver: bridge
